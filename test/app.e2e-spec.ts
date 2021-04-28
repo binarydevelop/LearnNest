@@ -2,14 +2,20 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from './../src/app.module';
+import { AppService } from 'src/app.service';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
+  let appService = { findAll: () => {
+    return ['test']
+  }}
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    }).overrideProvider(AppService)
+    .useValue(appService)
+    .compile()
 
     app = moduleFixture.createNestApplication();
     await app.init();
